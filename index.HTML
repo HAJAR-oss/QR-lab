@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QR Lab – Gestion des équipements de laboratoire</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary-color: #01579b;
+      --light-blue: #4fc3f7;
+      --light-blue-hover: #29b6f6;
+      --background-color: #ffffff;
+      --text-color: #333333;
+      --hover-color: #f2f7f9;
+      --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-color);
+      background: linear-gradient(to right, #e3f2fd, #ffffff);
+    }
+
+    .fade-in {
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      background: var(--background-color);
+      box-shadow: var(--shadow);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      padding: 0.5rem 1rem;
+    }
+
+    .header-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo {
+      width: 200px;
+      margin-bottom: 10px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .nav-links a {
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: 500;
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background-color: var(--hover-color);
+    }
+
+    .nav-links a.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      padding: 0.4rem 1rem;
+    }
+
+    .search-container i {
+      margin-right: 8px;
+      color: #f97316;
+    }
+
+    .search-bar {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 0.9rem;
+    }
+
+    .burger-menu {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 30px;
+      color: var(--primary-color);
+      cursor: pointer;
+    }
+
+    .nav-links.mobile {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .nav-links.mobile a {
+      padding: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .nav-links.mobile.active {
+      display: flex;
+    }
+
+    .hero-banner {
+      background: url('CRMEF CASABLANCA.png') center/cover no-repeat;
+      height: 400px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      margin-top: 100px;
+    }
+
+    .banner-overlay {
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 2rem;
+      border-radius: 10px;
+    }
+
+    .hero-banner h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .banner-button {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.3s ease;
+    }
+
+    .banner-button:hover {
+      background-color: var(--light-blue-hover);
+    }
+
+    .hero {
+      margin-top: 20px;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .image-button-section {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .image-button-block {
+      max-width: 300px;
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+
+    .image-button-block img {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      transition: transform 0.4s ease;
+    }
+
+    .image-button-block img:hover {
+      transform: scale(1.05);
+    }
+
+    .main-button {
+      background-color: var(--light-blue);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      width: 100%;
+      padding: 1rem;
+      margin-top: 15px;
+      transition: background 0.3s ease, transform 0.2s ease;
+      display: inline-block;
+    }
+
+    .main-button:hover {
+      background-color: var(--light-blue-hover);
+    }
+
+    .main-button:active {
+      transform: scale(0.97);
+    }
+
+    .intro {
+      max-width: 900px;
+      margin: 2rem auto;
+      text-align: center;
+      padding: 0 1rem;
+    }
+
+    .footer {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .footer-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 2rem;
+      gap: 2rem;
+    }
+
+    .footer-logo {
+      width: 100px;
+      margin-bottom: 1rem;
+    }
+
+    .footer-left {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .footer-right {
+      flex: 2;
+      min-width: 250px;
+    }
+
+    .footer-address {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .footer-bottom {
+      background-color: #001f3f;
+      color: #ccc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .image-button-section {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .image-button-block {
+        width: 90%;
+      }
+
+      .main-button {
+        font-size: 1rem;
+        padding: 0.8rem;
+      }
+
+      .search-container {
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .burger-menu {
+        display: block;
+      }
+
+      .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .footer-left, .footer-right {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header fade-in">
+    <div class="header-content">
+      <img src="https://crmefcasablancasettat.ma/wp-content/uploads/2022/05/Logo-CRMEF-CS-2022-AR-FR.png" alt="Logo" class="logo">
+      <nav class="nav-links">
+        <a href="index.html" class="active">Accueil</a>
+        <a href="appareils.html">Appareils chimiques</a>
+        <a href="produits.html">Produits chimiques</a>
+        <div class="search-container">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Recherche..." class="search-bar">
+        </div>
+      </nav>
+      <button class="burger-menu" aria-label="Menu mobile">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav class="nav-links mobile">
+        <a href="index.html" class="active">Accueil</a>
+        <a href="appareils.html">Appareils chimiques</a>
+        <a href="produits.html">Produits chimiques</a>
+        <div class="search-container">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Recherche..." class="search-bar">
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero-banner fade-in">
+    <div class="banner-overlay">
+      <h1>Centre Régional Des Métiers De L'Éducation Et De La Formation Casablanca-Settat, Siège</h1>
+      <a href="#" class="banner-button">EN SAVOIR PLUS</a>
+    </div>
+  </section>
+
+  <main class="hero fade-in">
+    <div class="image-button-section">
+      <div class="image-button-block">
+        <img src="produits chimiques.png" alt="Produits chimiques">
+        <a href="produits.html" class="main-button">Produits Chimiques</a>
+      </div>
+      <div class="image-button-block">
+        <img src="appareils.png" alt="Appareils de laboratoire">
+        <a href="appareils.html" class="main-button">Appareils</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer fade-in">
+    <div class="footer-content">
+      <div class="footer-left">
+        <img src="images.jpeg" alt="Blason Maroc" class="footer-logo">
+        <p class="footer-address">Bd. Stendhal, Derb Ghallef, Maarif, Casablanca Anfa, Maroc</p>
+      </div>
+      <div class="footer-right">
+        <h2>Bienvenue sur QR Lab</h2>
+        <p>Ce site a été conçu pour faciliter l’identification et la gestion des appareils et produits chimiques dans les laboratoires scolaires. Grâce à des QR codes reliés à des fiches descriptives en ligne, le suivi du matériel devient intuitif et instantané.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025 CRMEF Casablanca-Settat
+    </div>
+  </footer>
+
+  <script>
+    const burgerMenu = document.querySelector('.burger-menu');
+    const navLinksMobile = document.querySelector('.nav-links.mobile');
+    burgerMenu.addEventListener('click', () => {
+      navLinksMobile.classList.toggle('active');
+    });
+  </script>
+</body>
+</html>
